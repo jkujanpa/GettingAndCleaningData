@@ -45,7 +45,7 @@ run_analysis <- function() {
   activity <- read.table("./UCI HAR Dataset/activity_labels.txt", header = FALSE)
   
   # Index activity names with activity labels in dataset, and store as factor type 
-  dataset$V1 <- as.factor(activity$V2[dataset$tActivity])
+  dataset$tActivity <- as.factor(activity$V2[dataset$tActivity])
   
   
   # Step 4. Appropriately label the data set with descriptive variable names.
@@ -58,7 +58,10 @@ run_analysis <- function() {
   # with the average of each variable for each activity and each subject.  
   # -------------------------------------------------------------------------------
 
-  
+  library(dplyr)
+  dataset <- dataset %>% group_by(tSubject, tActivity) %>% summarise_each(funs(mean))
+
+  write.table(dataset, file = "tidyData.txt", row.name=FALSE)
   
   
   

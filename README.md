@@ -1,10 +1,12 @@
 # GettingAndCleaningData
 
+## run_analysis()
 
-You should create one R script called run_analysis.R that does the following.
-
-1. Merges the training and the test sets to create one data set.
-2. Extracts only the measurements on the mean and standard deviation for each measurement. 
-3. Uses descriptive activity names to name the activities in the data set
-4. Appropriately labels the data set with descriptive variable names. 
-5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+  
+1. Read the features file to get column names for data and then read the actual data with the column names. Finaly combine subjects, labels and set by columns. This is done for both training and test data. Then combine training data and test data by rows
+2. Grep columns with mean or std in feature name from features. First column is the added label => increase columns by 1. Finally select activity label column and columns with mean or std -values
+3. Read activity names from file. Index activity names with activity labels in dataset, and store as factor type 
+4. Tidy the dataset by using group_by and summarise_each functionalities from dplyr library and write the result to file.
+  
+  
+ 
