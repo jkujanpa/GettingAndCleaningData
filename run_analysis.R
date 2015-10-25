@@ -3,17 +3,22 @@ run_analysis <- function() {
   # Step 1. Merge the training and the test sets to create one data set.
   # --------------------------------------------------------------------
   
+  # Read features
+  features <- read.table("./UCI HAR Dataset/features.txt", header = FALSE)
+  
   # Read training data
-  trainX <- read.table("./UCI HAR Dataset/train/X_train.txt", header = FALSE)
-  trainY <- read.table("./UCI HAR Dataset/train/y_train.txt", header = FALSE)
-  # Combine training labelsand training set by columns
-  train <- cbind(trainY, trainX)
+  trainX <- read.table("./UCI HAR Dataset/train/X_train.txt", header = FALSE, col.names = features$V2)
+  trainY <- read.table("./UCI HAR Dataset/train/y_train.txt", header = FALSE, col.names = "tActivity")
+  trainSub <- read.table("./UCI HAR Dataset/train/subject_train.txt", header = FALSE, col.names = "tSubject")
+  # Combine training subjects, labels and set by columns
+  train <- cbind(trainSub, trainY, trainX)
   
   # Read test data
-  testX <- read.table("./UCI HAR Dataset/test/X_test.txt", header = FALSE)
-  testY <- read.table("./UCI HAR Dataset/test/y_test.txt", header = FALSE)
-  # Combine test labels and test set by columns
-  test <- cbind(testY, testX)
+  testX <- read.table("./UCI HAR Dataset/test/X_test.txt", header = FALSE, col.names = features$V2)
+  testY <- read.table("./UCI HAR Dataset/test/y_test.txt", header = FALSE, col.names = "tActivity")
+  testSub <- read.table("./UCI HAR Dataset/test/subject_test.txt", header = FALSE, col.names = "tSubject")
+  # Combine test subjects, labels and set by columns
+  test <- cbind(testSub, testY, testX)
   
   # Combine training data and test data by rows
   dataset <- rbind(train,test)
@@ -22,10 +27,7 @@ run_analysis <- function() {
   # Step 2. Extract only the measurements on the mean and standard deviation for each measurement. 
   # ----------------------------------------------------------------------------------------------
   
-  # Read features
-  features <- read.table("./UCI HAR Dataset/features.txt", header = FALSE)
-  
-  # Columns with mean or std in feature name
+  # Columns with mean or std in feature name from features
   columns <- grep("\\bmean\\b|\\bstd\\b",features$V2)
   # First column is the added label => increase columns by 1
   columns <- columns + 1
@@ -42,10 +44,21 @@ run_analysis <- function() {
   # Read activity names
   activity <- read.table("./UCI HAR Dataset/activity_labels.txt", header = FALSE)
   
+  # Index activity names with activity labels in dataset, and store as factor type 
+  dataset$V1 <- as.factor(activity$V2[dataset$tActivity])
   
-  #testSubject <- read.table("./UCI HAR Dataset/test/subject_test.txt", header = FALSE)
+  
+  # Step 4. Appropriately label the data set with descriptive variable names.
+  # -------------------------------------------------------------------------
+  
+  # Done in Step 1 by adding col.names to read.table functions
 
-  #trainSubject <- read.table("./UCI HAR Dataset/train/subject_train.txt", header = FALSE)
+  
+  # Step 5. From the data set in step 4, create a second, independent tidy data set 
+  # with the average of each variable for each activity and each subject.  
+  # -------------------------------------------------------------------------------
+
+  
   
   
   
